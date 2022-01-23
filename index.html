@@ -1,68 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link rel="stylesheet" href="/static/style.css">
-  </head>
-  
-  <body class="bgcolor">
-    <div class="main container ">
-  
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search box">
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button">
-            <i class="fa fa-search"></i>
-          </button>
-        </div>
+
+<head>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body class="bgcolor">
+  <div class="main container ">
+
+    <div class="input-group">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search box">
+      <div class="input-group-append">
+        <button id="searchButton" class="btn btn-primary" type="button">
+          <i class="fa fa-search"></i>
+        </button>
       </div>
     </div>
+  </div>
 
-    <section class="container">
-      <article class="search-result row border border-primary rounded">
-      
-        <div class="col-md-2">
-          <ul class="meta-search">
-            <p>ranking : 1</p>
-            <p>from : Google.com</p>
-          </ul>
-        </div>
-        <div class="col-md-10 excerpet">
-          <h3><a href="#" title="">Hello (Adele song) - Wikipedia</a></h3>
-          <p>"Hello" is a song recorded by English singer-songwriter Adele, released on 23 October 2015 by XL Recordings as the lead single from her third studio album, ...</p>						
-        </div>
-      </article>
+  <section class="container">
+    <article class="search-result row border border-primary rounded">
 
-      <article class="search-result row border border-primary rounded">
-      
-        <div class="col-md-2">
-          <ul class="meta-search">
-            <p>ranking : 1</p>
-            <p>from : Google.com</p>
-          </ul>
-        </div>
-        <div class="col-md-10 excerpet">
-          <h3><a href="#" title="">Hello (Adele song) - Wikipedia</a></h3>
-          <p>"Hello" is a song recorded by English singer-songwriter Adele, released on 23 October 2015 by XL Recordings as the lead single from her third studio album, ...</p>						
-        </div>
-      </article>
+      <div class="col-md-2">
+        <ul class="meta-search">
+          <p id="ranking"></p>
+          <p id="engine"></p>
+          <p id="link"></p>
+        </ul>
+      </div>
+      <div class="col-md-10 excerpet">
+        <h3 id="title"></h3>
+        <p id="description"></p>
+      </div>
+    </article>
+  </section>
+  <script src="/static/main.js"></script>
+</body>
 
-      <article class="search-result row border border-primary rounded">
-      
-        <div class="col-md-2">
-          <ul class="meta-search">
-            <p>ranking : 1</p>
-            <p>from : Google.com</p>
-          </ul>
-        </div>
-        <div class="col-md-10 excerpet">
-          <h3><a href="#" title="">Hello (Adele song) - Wikipedia</a></h3>
-          <p>"Hello" is a song recorded by English singer-songwriter Adele, released on 23 October 2015 by XL Recordings as the lead single from her third studio album, ...</p>						
-        </div>
-      </article>
-  
-    </section>
-
-  </body>
 </html>
