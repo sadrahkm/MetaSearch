@@ -20,7 +20,7 @@ app.get("/", async function (request, response) {
 const SerpApi = require('google-search-results-nodejs');
 const search = new SerpApi.GoogleSearch("e0ab17dbaec72a0f814b95e80de85035bf5f9aaec3a53ff683c7bd6aa6f2a0df");
 
-const YAHOO_PRIORITY = 0;
+const YAHOO_PRIORITY = 1.1;
 const GOOGLE_PRIORITY = 1;
 
 
@@ -49,52 +49,85 @@ Array.prototype.remove = function (index) {
     }
 }
 
-function mergeTheResults() {
-    let middleArray = [];
-    // console.log(yahooResults)
-    googleResults.forEach((googleItem, googleKey) => {
-        yahooResults.forEach((yahooItem, yahooKey) => {
-            if (googleItem && yahooItem && googleItem.link === yahooItem.link)
-                if (googleItem.rank > yahooItem.rank)
-                    yahooResults.remove(yahooKey);
-                else if (googleItem.rank < yahooItem.rank)
-                    googleResults.remove(googleKey);
-                else if (GOOGLE_PRIORITY > YAHOO_PRIORITY)
-                    yahooResults.remove(yahooKey);
-                else
-                    googleResults.remove(googleKey);
-        });
-    });
-    // console.log(yahooResults)
-    googleResults.forEach((googleItem, googleKey) => {
-        middleArray[googleKey] = googleItem;
-    });
-    yahooResults.forEach((yahooItem, yahooKey) => {
-        if (middleArray[yahooKey] === undefined)
-            middleArray[yahooKey] = yahooItem
-        else if (yahooItem !== undefined)
-            middleArray[yahooKey] = [middleArray[yahooKey], yahooItem];
-    });
-    console.log("------")
-    console.log(middleArray)
-    console.log("------")
-    let finalResult = [];
-    middleArray.forEach((item, key) => {
-        if (Array.isArray(item))
-            if (GOOGLE_PRIORITY > YAHOO_PRIORITY) {
-                finalResult.push(item[0]);
-                finalResult.push(item[1]);
-            } else {
-                finalResult.push(item[1]);
-                finalResult.push(item[0]);
-            }
-        else
-            finalResult.push(item);
-    });
-    console.log(finalResult)
-    return finalResult;
-}
+// function mergeTheResults() {
+//     let middleArray = [];
+//     // console.log(yahooResults)
+//     googleResults.forEach((googleItem, googleKey) => {
+//         yahooResults.forEach((yahooItem, yahooKey) => {
+//             if (googleItem && yahooItem && googleItem.link === yahooItem.link)
+//                 if (googleItem.rank < yahooItem.rank)
+//                     yahooResults.remove(yahooKey);
+//                 else if (googleItem.rank > yahooItem.rank)
+//                     googleResults.remove(googleKey);
+//                 else if (GOOGLE_PRIORITY > YAHOO_PRIORITY)
+//                     yahooResults.remove(yahooKey);
+//                 else
+//                     googleResults.remove(googleKey);
+//         });
+//     });
+//     // console.log(yahooResults)
+//     googleResults.forEach((googleItem, googleKey) => {
+//         middleArray[googleKey] = googleItem;
+//     });
+//     yahooResults.forEach((yahooItem, yahooKey) => {
+//         if (middleArray[yahooKey] === undefined)
+//             middleArray[yahooKey] = yahooItem
+//         else if (yahooItem !== undefined)
+//             middleArray[yahooKey] = [middleArray[yahooKey], yahooItem];
+//     });
+//     console.log("------")
+//     console.log(middleArray)
+//     console.log("------")
+//     let finalResult = [];
+//     middleArray.forEach((item, key) => {
+//         if (Array.isArray(item))
+//             if (GOOGLE_PRIORITY > YAHOO_PRIORITY) {
+//                 finalResult.push(item[0]);
+//                 finalResult.push(item[1]);
+//             } else {
+//                 finalResult.push(item[1]);
+//                 finalResult.push(item[0]);
+//             }
+//         else
+//             finalResult.push(item);
+//     });
+//     console.log(finalResult)
+//     return finalResult;
+// }
 
+function mergeTheResults2(googleResults, yahooResults) {
+    let finalReselt = [];
+    for (let i = 0; i < googleResults.length; i++) {
+        var obj = {
+            key1: googleResults[i],
+            key2: googleResults[i].rank * GOOGLE_PRIORITY
+        };
+        finalReselt.push(obj);
+    }
+    for (let i = 0; i < yahooResults.length; i++) {
+        var obj = {
+            key1: yahooResults[i],
+            key2: yahooResults[i].rank * YAHOO_PRIORITY
+        };
+        finalReselt.push(obj);
+    }
+    var sorted = finalReselt.sort(function (a, b) {
+        return a.key2 - b.key2
+    });
+    let sorted_results = [];
+    for (let i = 0; i < sorted.length; i++) {
+        sorted_results.push(sorted[i].key1);
+    }
+    let final = [];
+    for (let i = 0; i < sorted_results.length; i++) {
+        for (let j = i + 1; j < sorted_results.length; j++) {
+            if (sorted_results[i].link === sorted_results[j].link) {
+                sorted_results.splice(j, 1);
+            }
+        }
+    }
+    return sorted_results
+}
 
 async function searchPhrase() {
     googleParams = {
@@ -125,6 +158,5 @@ async function searchPhrase() {
     console.log("---- Yahoo ----")
     console.log(yahooResults)
     console.log("---- Final ----")
-    return mergeTheResults();
+    return mergeTheResults2(googleResults, yahooResults);
 }
-
