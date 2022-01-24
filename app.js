@@ -120,13 +120,18 @@ function mergeTheResults2(googleResults, yahooResults) {
     }
     let final = [];
     for (let i = 0; i < sorted_results.length; i++) {
-        for (let j = i + 1; j < sorted_results.length; j++) {
-            if (sorted_results[i].link === sorted_results[j].link) {
-                sorted_results.splice(j, 1);
+        let flag = false;
+        for (let j = 0; j < final.length; j++) {
+            if (final[j].link === sorted_results[i].link) {
+                flag = true;
+                continue;
             }
         }
+        if (!flag) {
+            final.push(sorted_results[i]);
+        }
     }
-    return sorted_results
+    return final;
 }
 
 async function searchPhrase() {
