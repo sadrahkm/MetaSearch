@@ -7,10 +7,12 @@ server.listen(port, () => {
 });
 app.use("/static", express.static("./static/"));
 let phrase;
-app.get("/", function (request, response) {
+let googleParams;
+let yahooParams;
+app.get("/", async function (request, response) {
     phrase = request.query.search;
-    if (phrase) {
-        let json = searchPhrase();
+    if (phrase !== undefined) {
+        let json = await searchPhrase();
         response.send(json);
     } else
         response.sendFile(__dirname + "/index.html");
@@ -21,26 +23,7 @@ const search = new SerpApi.GoogleSearch("e0ab17dbaec72a0f814b95e80de85035bf5f9aa
 const YAHOO_PRIORITY = 0;
 const GOOGLE_PRIORITY = 1;
 
-const googleParams = {
-    engine: "google",
-    q: "Coffee",
-    hl: "en",
-    gl: "us",
-    num: 6
-};
 
-const yahooParams = {
-    engine: "yahoo",
-    p: "Coffee",
-    pz: 5
-};
-let queryGoogle = new Promise((resolve) => {
-    search.json(googleParams, resolve);
-});
-
-let queryYahoo = new Promise((resolve) => {
-    search.json(yahooParams, resolve);
-});
 
 let googleResults;
 let yahooResults;
@@ -92,9 +75,9 @@ function mergeTheResults() {
         else if (yahooItem !== undefined)
             middleArray[yahooKey] = [middleArray[yahooKey], yahooItem];
     });
-    // console.log("------")
-    // console.log(middleArray)
-    // console.log("------")
+    console.log("------")
+    console.log(middleArray)
+    console.log("------")
     let finalResult = [];
     middleArray.forEach((item, key) => {
         if (Array.isArray(item))
@@ -108,14 +91,35 @@ function mergeTheResults() {
         else
             finalResult.push(item);
     });
-    // console.log(finalResult)
+    console.log(finalResult)
     return finalResult;
 }
 
 
 async function searchPhrase() {
+    googleParams = {
+        engine: "google",
+        q: phrase,
+        hl: "en",
+        gl: "us",
+        num: 6
+    };
+
+    yahooParams = {
+        engine: "yahoo",
+        p: phrase,
+        pz: 5
+    };
+    let queryGoogle = new Promise((resolve) => {
+        search.json(googleParams, resolve);
+    });
+
+    let queryYahoo = new Promise((resolve) => {
+        search.json(yahooParams, resolve);
+    });
     googleResults = await queryGoogle.then(data => transformQueriesToArray(data, "google"));
     yahooResults = await queryYahoo.then(data => transformQueriesToArray(data, "yahoo"));
+
     console.log("---- Google ----")
     console.log(googleResults);
     console.log("---- Yahoo ----")
@@ -123,6 +127,4 @@ async function searchPhrase() {
     console.log("---- Final ----")
     return mergeTheResults();
 }
-
-searchPhrase();
 
